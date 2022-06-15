@@ -30,7 +30,7 @@
 	}
 </script>
 
-<div class="progress" on:mousedown="{handleMousemove}" style="width: {bar_width}px;" bind:offsetHeight="{bar_offset_x}">
+<div class="progress" on:mouseup="{handleMousemove}" style="width: {bar_width}px;" bind:offsetHeight="{bar_offset_x}">
     <div class="progress_bar" style="width: {time/duration*100}%;"></div>
 </div>
 
@@ -42,6 +42,7 @@
         position: relative;
         overflow: hidden;
         margin: .2rem;
+        cursor: pointer;
     }
 
     .progress_bar {

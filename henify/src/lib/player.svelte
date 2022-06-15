@@ -26,6 +26,7 @@
     * @type {number}
     */
     let sound_duration = 0
+    let is_ended
     onMount(async () => {
 
     })
@@ -69,7 +70,7 @@
     <h2>{title}</h2>
     <Progress_bar duration={sound_duration} time={player_time} on:time_changed={set_new_time}/>
     <p>{fancyTimeFormat(Math.round(player_time))} — {fancyTimeFormat(sound_duration)}</p>
-    <audio src={src} bind:this="{player}" bind:currentTime="{player_time}" bind:duration="{sound_duration}"></audio>
+    <audio src={src} bind:this="{player}" bind:currentTime="{player_time}" bind:duration="{sound_duration}" bind:ended="{is_ended}"></audio>
     <div class="btn_list">
         <button on:click="{pause}" class="pause" aria-label="pause"></button>
         <button on:click="{play}" class="play" aria-label="play"></button>
@@ -77,6 +78,21 @@
 </div>
 
 <style>
+@keyframes btnAnim {
+	0% {
+		transform: scale(1);
+	}
+
+	50% {
+		transform: scale(1.5);
+        transform: rotate(47, 45);
+	}
+
+	100% {
+		transform: scale(1);
+	}
+    }
+
     .wrapper {
         margin: .5rem;
         padding: 1rem;
@@ -117,6 +133,11 @@
         border-style: double;
         border-width: 0px 0px 0px 3rem;
         border-color: #202020;
+        cursor: pointer;
+    }
+
+    .wrapper button:active {
+        animation: btnAnim 0.5s ease 0s 1 normal forwards;
     }
 
     .btn_list {
