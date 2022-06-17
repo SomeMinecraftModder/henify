@@ -26,7 +26,16 @@
     * @type {number}
     */
     let sound_duration = 0
-    let is_ended
+    let is_ended = false
+    let is_loop = false
+
+    $: if (is_loop) {
+        if (is_ended) {
+            player_time = 0
+            player.play()
+        }
+    }
+
     onMount(async () => {
 
     })
@@ -43,15 +52,19 @@
         player_time = event.detail.new_time
     }
 
+    function toggle_is_loop() {
+        is_loop = !is_loop
+    }
+
     /**
     * @param {number} duration
     */
     function fancyTimeFormat(duration)
     {   
         // Hours, minutes and seconds
-        var hrs = ~~(duration / 3600);
-        var mins = ~~((duration % 3600) / 60);
-        var secs = ~~duration % 60;
+        let hrs = ~~(duration / 3600);
+        let mins = ~~((duration % 3600) / 60);
+        let secs = ~~duration % 60;
 
         // Output like "1:01" or "4:03:59" or "123:03:59"
         var ret = "";
@@ -63,7 +76,7 @@
         ret += "" + mins + ":" + (secs < 10 ? "0" : "");
         ret += "" + secs;
         return ret;
-}
+    }
     
 </script>
 <div class="wrapper">
@@ -74,6 +87,11 @@
     <div class="btn_list">
         <button on:click="{pause}" class="pause" aria-label="pause"></button>
         <button on:click="{play}" class="play" aria-label="play"></button>
+        {#if is_loop}
+            <button on:click="{toggle_is_loop}" class="repeat-active" aria-label="loop"></button>
+        {:else}
+            <button on:click="{toggle_is_loop}" class="repeat" aria-label="loop"></button>
+        {/if}
     </div>
 </div>
 
@@ -85,7 +103,6 @@
 
 	50% {
 		transform: scale(1.5);
-        transform: rotate(47, 45);
 	}
 
 	100% {
@@ -116,24 +133,36 @@
     }
 
     .wrapper .play {
-        box-sizing: border-box;
-        width: 1rem;
-        height: .5rem;
-        border-style: solid;
-        border-width: 1rem;
-        border-color: #202020;
-        border-width: 37px 0px 37px 3rem;
-        border-color: transparent transparent transparent #202020;
-        cursor: pointer;
+        width: 5rem;
+        height: 5rem;
+        background-image: url("src/lib/play-circle.svg");
+        background-repeat: no-repeat;
+        background-size: cover;
     }
 
     .wrapper .pause {
-        width: .5rem;
+        width: 5rem;
         height: 5rem;
-        border-style: double;
-        border-width: 0px 0px 0px 3rem;
-        border-color: #202020;
-        cursor: pointer;
+        background-image: url("src/lib/pause.svg");
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .wrapper .repeat {
+        width: 5rem;
+        height: 5rem;
+        background-image: url("src/lib/repeat.svg");
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .wrapper .repeat-active {
+        width: 5rem;
+        height: 5rem;
+        background-image: url("src/lib/repeat.svg");
+        filter: invert(53%) sepia(39%) saturate(4971%) hue-rotate(161deg) brightness(95%) contrast(101%); /*yes i don't know how to edit svg*/
+    background-repeat: no-repeat;
+        background-size: cover;
     }
 
     .wrapper button:active {
