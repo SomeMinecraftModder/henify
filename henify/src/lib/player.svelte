@@ -30,15 +30,13 @@
     let is_ended = false
     let is_loop = false
 
-    $: if (is_loop) {
-        if (is_ended) {
+    $: if (is_loop && is_ended) {
             player_time = 0
             player.play()
-        }
     }
 
     onMount(async () => {
-
+        player.play()
     })
 
     function pause() {
