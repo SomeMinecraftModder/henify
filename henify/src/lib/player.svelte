@@ -3,6 +3,7 @@
 
     import { onMount } from 'svelte';
     import Progress_bar from "$lib/progress_bar.svelte"
+    import FancyTextProgress from './fancy_text_progress.svelte';
 
     export 
     /**
@@ -55,34 +56,12 @@
     function toggle_is_loop() {
         is_loop = !is_loop
     }
-
-    /**
-    * @param {number} duration
-    */
-    function fancyTimeFormat(duration)
-    {   
-        // Hours, minutes and seconds
-        let hrs = ~~(duration / 3600);
-        let mins = ~~((duration % 3600) / 60);
-        let secs = ~~duration % 60;
-
-        // Output like "1:01" or "4:03:59" or "123:03:59"
-        var ret = "";
-
-        if (hrs > 0) {
-            ret += "" + hrs + ":" + (mins < 10 ? "0" : "");
-        }
-
-        ret += "" + mins + ":" + (secs < 10 ? "0" : "");
-        ret += "" + secs;
-        return ret;
-    }
     
 </script>
 <div class="wrapper">
     <h2>{title}</h2>
     <Progress_bar duration={sound_duration} time={player_time} on:time_changed={set_new_time}/>
-    <p>{fancyTimeFormat(Math.round(player_time))} — {fancyTimeFormat(sound_duration)}</p>
+    <FancyTextProgress player_time={player_time} sound_duration={sound_duration} />
     <audio src={src} bind:this="{player}" bind:currentTime="{player_time}" bind:duration="{sound_duration}" bind:ended="{is_ended}"></audio>
     <div class="btn_list">
         <button on:click="{pause}" class="pause" aria-label="pause"></button>
@@ -90,7 +69,7 @@
         {#if is_loop}
             <button on:click="{toggle_is_loop}" class="repeat-active" aria-label="loop"></button>
         {:else}
-            <button on:click="{toggle_is_loop}" class="repeat" aria-label="loop"></button>
+            <button on:click="{toggle_is_loop}" class="repeat" aria-label="loop (active)"></button>
         {/if}
     </div>
 </div>
@@ -116,11 +95,6 @@
         width: fit-content;
         background-color: rgb(224, 224, 224);
         border-radius: 1rem;
-    }
-
-    .wrapper p {
-        text-align: center;
-        font-size: 1.5rem;
     }
 
     .wrapper h2 {
@@ -161,7 +135,7 @@
         height: 5rem;
         background-image: url("src/lib/repeat.svg");
         filter: invert(53%) sepia(39%) saturate(4971%) hue-rotate(161deg) brightness(95%) contrast(101%); /*yes i don't know how to edit svg*/
-    background-repeat: no-repeat;
+        background-repeat: no-repeat;
         background-size: cover;
     }
 
@@ -173,6 +147,6 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        column-gap: 2rem;
+        column-gap: 5rem;
     }
 </style>
